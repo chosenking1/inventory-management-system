@@ -155,13 +155,6 @@ This is a Django-based Inventory Management System application.
       }
       ```
 
-### Admin Panel
-
-12. **Django Admin**
-    - **Endpoint:** `admin/`
-    - **Method:** GET
-    - **Description:** Access the Django admin panel for managing the application.
-    - **Note:** Requires admin login.
 
 ## Testing
 
