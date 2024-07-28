@@ -1,26 +1,22 @@
-from django.shortcuts import render
-
-# Create your views here.
-# reports/views.py
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAdminUser
 from django.db.models import Sum, F
 from datetime import datetime, timedelta
 from inventory.models import Product
 from orders.models import OrderItem
 from .serializers import LowStockProductSerializer, SalesReportSerializer
+from .permissions import IsAdmin 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def low_stock_products(request):
     low_stock_products = Product.objects.filter(quantity__lt=10)
     serializer = LowStockProductSerializer(low_stock_products, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAdmin])
 def sales_report(request, period):
     today = datetime.now().date()
     if period == 'day':

@@ -5,7 +5,7 @@ from .serializers import ProductSerializer
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """
-    Custom permission to only allow admin users to edit it.
+    Custom permission to only allow users with role 'admin' to edit it.
     """
     def has_permission(self, request, view):
         # Read permissions are allowed to any request,
@@ -13,8 +13,8 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Write permissions are only allowed to the admin users.
-        return request.user and request.user.is_staff
+        # Write permissions are only allowed to users with role 'admin'.
+        return request.user and request.user.role == 'admin'
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()

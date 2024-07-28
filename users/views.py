@@ -10,12 +10,18 @@ from .serializers import UserSerializer
 
 @api_view(['POST'])
 def login(request):
-    user = get_object_or_404(CustomUser, username=request.data['username'])
+    try:
+        user = CustomUser.objects.get(username=request.data['username'])
+    except CustomUser.DoesNotExist:
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_404_NOT_FOUND)
+    
     if not user.check_password(request.data['password']):
         return Response({'error': 'Invalid credentials'}, status=status.HTTP_404_NOT_FOUND)
+    
     token, _ = Token.objects.get_or_create(user=user)
     serializer = UserSerializer(instance=user)
     return Response({"token": token.key, "user": serializer.data}, status=status.HTTP_200_OK)
+
 
 @api_view(['POST'])
 def signup(request):
